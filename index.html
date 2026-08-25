@@ -3,23 +3,186 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>달의 가게 — 문서 · Documents · ドキュメント · 文件</title>
+<title>달의 가게 · Moonlit Tarot — 타로를 배우고 친구에게 읽어주는 앱</title>
+<meta name="description" content="타로를 몰라도 친구에게 읽어줄 수 있어요. 3급부터 1급까지 16개 레슨, 잠긴 강의는 없어요. 광고도 구독도 없고 기록은 이 폰에만 저장돼요.">
+<meta property="og:title" content="달의 가게 · Moonlit Tarot">
+<meta property="og:description" content="타로를 배우고, 친구에게 직접 읽어주는 앱">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#151936">
 <style>
-  :root { color-scheme: light dark; }
-  body { max-width: 640px; margin: 0 auto; padding: 48px 20px;
-         font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Hiragino Sans", "PingFang TC", "Segoe UI", sans-serif; }
-  @media (prefers-color-scheme: dark) { body { color:#e8e8e8; background:#121212 } a { color:#6cb6ff } }
-  h1 { font-size: 1.5rem; }
-  ul { line-height: 2.2; }
-  .sub { color:#8a8a8a; font-size:.95rem; }
+  :root{
+    --bg:#151936; --bg2:#262c58; --surface:#1e2348; --line:#343a6e;
+    --line2:#3b4276; --ink:#f2eefc; --sub:#b7b0d6; --gold:#e9cf9f; --lav:#cfc0f5;
+    --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Hiragino Sans",
+            "PingFang TC", "Segoe UI", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);
+       line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:var(--gold)}
+  /* 언어 전환 */
+  .langbar{position:sticky;top:0;z-index:20;background:rgba(21,25,54,.86);
+           backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:10px 0}
+  .langbar .wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .langbar .brand{display:flex;align-items:center;gap:10px;margin-right:auto;font-weight:700}
+  .langbar img{width:30px;height:30px;border-radius:8px}
+  .lang{background:none;border:1px solid var(--line2);color:var(--sub);border-radius:999px;
+        padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer;min-height:36px}
+  .lang[aria-current="true"]{background:var(--gold);color:#20182c;border-color:var(--gold);font-weight:700}
+  /* 히어로 */
+  .hero{position:relative;padding:72px 0 56px;background:
+        radial-gradient(120% 90% at 50% -10%, #2f376e 0%, var(--bg) 62%)}
+  .hero h1{font-size:clamp(2rem,5.4vw,3.4rem);line-height:1.25;margin:0 0 .5em;letter-spacing:-.01em}
+  .hero .lede{font-size:clamp(1.02rem,2.2vw,1.22rem);color:var(--sub);margin:0 0 2em;max-width:34em}
+  .cta{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#20182c;
+       font-weight:800;text-decoration:none;padding:15px 30px;border-radius:999px;min-height:52px;
+       box-shadow:0 12px 34px -14px rgba(233,207,159,.75)}
+  .cta.soon{background:transparent;color:var(--gold);border:1px solid var(--gold);box-shadow:none}
+  .note{color:var(--sub);font-size:.9rem;margin-top:14px}
+  .shot{width:100%;max-width:980px;margin:44px auto 0;display:block;border-radius:18px;
+        border:1px solid var(--line2);box-shadow:0 30px 70px -30px #000}
+  /* 섹션 */
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(1.4rem,3.4vw,2rem);margin:0 0 .5em;line-height:1.3}
+  .sub{color:var(--sub);margin:0 0 2em;max-width:38em}
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{margin:0 0 .35em;font-size:1.06rem;color:var(--gold)}
+  .card p{margin:0;color:var(--sub);font-size:.95rem}
+  .steps{counter-reset:s;display:grid;gap:16px;padding:0;list-style:none;margin:0}
+  .steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);
+            border-radius:14px;padding:20px 22px 20px 66px;position:relative;color:var(--sub)}
+  .steps li::before{content:counter(s);position:absolute;left:20px;top:18px;width:32px;height:32px;
+    border-radius:50%;background:var(--gold);color:#20182c;font-weight:800;
+    display:grid;place-items:center;font-size:.95rem}
+  .steps b{color:var(--ink);display:block;margin-bottom:2px}
+  .gallery{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:start}
+  .gallery img{width:100%;border-radius:16px;border:1px solid var(--line2);display:block}
+  .gallery figcaption{color:var(--sub);font-size:.88rem;margin-top:10px;text-align:center}
+  .gallery figure{margin:0}
+  .free{background:linear-gradient(180deg,#20264e,#1a1f42);border:1px solid var(--gold);
+        border-radius:18px;padding:32px}
+  .free ul{margin:0;padding-left:1.15em;color:var(--sub)}
+  .free li{margin:.35em 0}
+  .free li b{color:var(--ink)}
+  details{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+          padding:14px 18px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:700;min-height:32px}
+  details p{color:var(--sub);margin:.7em 0 .2em}
+  footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--sub);font-size:.9rem}
+  footer a{margin-right:16px}
+  [data-l]{display:none}
+  html[data-lang="ko"] [data-l~="ko"], html[data-lang="en"] [data-l~="en"],
+  html[data-lang="ja"] [data-l~="ja"], html[data-lang="zh"] [data-l~="zh"]{display:revert}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<h1>달의 가게 · Moonlit Tarot</h1>
-<p class="sub">타로를 배우고 친구에게 읽어주는 앱 · Learn tarot, read for friends</p>
-<ul>
-  <li><a href="./privacy-policy.html">개인정보처리방침 · Privacy Policy · プライバシーポリシー · 隱私權政策</a></li>
-</ul>
-<p class="sub">문의 · Contact: <a href="mailto:travelic.games@gmail.com">travelic.games@gmail.com</a></p>
+
+<div class="langbar"><div class="wrap">
+  <span class="brand"><img src="./img/icon.webp" alt=""><span data-l="ko">달의 가게</span><span data-l="en">Moonlit Tarot</span><span data-l="ja">月の店</span><span data-l="zh">月之小舖</span></span>
+  <button class="lang" data-set="ko">한국어</button>
+  <button class="lang" data-set="en">English</button>
+  <button class="lang" data-set="ja">日本語</button>
+  <button class="lang" data-set="zh">繁體中文</button>
+</div></div>
+
+<div class="hero"><div class="wrap">
+  <h1><span data-l="ko">타로를 몰라도<br>친구에게 읽어줄 수 있어요</span><span data-l="en">Read tarot for a friend<br>even if you never learned</span><span data-l="ja">タロットを知らなくても<br>友達に占ってあげられる</span><span data-l="zh">不懂塔羅<br>也能為朋友解讀</span></h1>
+  <p class="lede"><span data-l="ko">폰을 건네면 친구가 직접 카드를 뽑아요. 3급부터 1급까지 16개 레슨을 순서대로 따라가면, 처음이어도 마주 앉아 읽어줄 수 있어요.</span><span data-l="en">Hand them the phone and they draw the card themselves. Sixteen lessons take you from level 3 to level 1 — enough to sit across from a friend and read.</span><span data-l="ja">スマホを渡すと友達が自分でカードを引きます。3級から1級まで16レッスンを順に進めば、初めてでも向かい合って占ってあげられます。</span><span data-l="zh">把手機遞過去，朋友自己抽牌。從三級到一級共 16 堂課，第一次也能面對面為朋友解讀。</span></p>
+  <a class="cta soon" href="#free"><span data-l="ko">곧 App Store 에서 만나요</span><span data-l="en">Coming soon to the App Store</span><span data-l="ja">近日 App Store にて公開</span><span data-l="zh">即將在 App Store 上架</span></a>
+  <p class="note"><span data-l="ko">iPhone · 한국어 · English · 日本語 · 繁體中文</span><span data-l="en">iPhone · Korean · English · Japanese · Traditional Chinese</span><span data-l="ja">iPhone · 韓国語 · 英語 · 日本語 · 繁体字中国語</span><span data-l="zh">iPhone · 韓文 · 英文 · 日文 · 繁體中文</span></p>
+  <img class="shot" src="./img/hero.webp" alt="">
+</div></div>
+
+<section><div class="wrap">
+  <h2><span data-l="ko">타로 앱은 많은데, 왜 늘 내가 보는 쪽일까</span><span data-l="en">Every tarot app reads to you. None teach you to read.</span><span data-l="ja">占ってもらうアプリばかりで、占ってあげるものがない</span><span data-l="zh">塔羅 App 都是幫你算，沒有教你怎麼幫別人算</span></h2>
+  <p class="sub"><span data-l="ko">대부분의 타로 앱은 결과를 알려줍니다. 달의 가게는 <b>당신이 읽어주는 사람</b>이 되도록 가르칩니다. 친구가 앞에 앉아 있을 때 필요한 건 정답이 아니라, 같이 이야기를 여는 법이니까요.</span><span data-l="en">Most tarot apps tell you your fortune. This one teaches you to give one. What you need with a friend in front of you is not a verdict — it is a way to open the conversation.</span><span data-l="ja">多くの占いアプリは結果を教えてくれます。月の店は<b>あなたが占ってあげる側</b>になれるように教えます。目の前の友達に必要なのは答えではなく、話を開く方法です。</span><span data-l="zh">大多數塔羅 App 告訴你結果。月之小舖教你成為<b>解讀的那個人</b>。朋友坐在對面時，需要的不是答案，而是打開話題的方法。</span></p>
+  <div class="grid">
+    <div class="card"><h3><span data-l="ko">외우지 않아요</span><span data-l="en">No memorising</span><span data-l="ja">暗記しません</span><span data-l="zh">不用背</span></h3>
+      <p><span data-l="ko">그림에서 볼 곳을 찾고, 의미를 얹고, 말로 옮기는 순서만 익히면 됩니다.</span><span data-l="en">Find where to look, add the meaning, then put it into words. That order is the whole method.</span><span data-l="ja">絵のどこを見るか探し、意味を重ね、言葉にする。その順番だけ覚えます。</span><span data-l="zh">找到該看的地方、疊上意義、說成一句話。學會這個順序就夠了。</span></p></div>
+    <div class="card"><h3><span data-l="ko">잠긴 레슨이 없어요</span><span data-l="en">Nothing is locked</span><span data-l="ja">ロックはありません</span><span data-l="zh">沒有一課上鎖</span></h3>
+      <p><span data-l="ko">16개 레슨 전부 무료입니다. 결제해야 열리는 강의는 하나도 없습니다.</span><span data-l="en">All sixteen lessons are free. Not one of them sits behind a payment.</span><span data-l="ja">16レッスンすべて無料です。課金で開くものは一つもありません。</span><span data-l="zh">16 堂課全部免費，沒有任何一課需要付費解鎖。</span></p></div>
+    <div class="card"><h3><span data-l="ko">기록은 이 폰에만</span><span data-l="en">Everything stays on your phone</span><span data-l="ja">記録はこの端末だけに</span><span data-l="zh">紀錄只留在手機裡</span></h3>
+      <p><span data-l="ko">서버가 없습니다. 친구의 별명도, 봐준 기록도 어디로도 전송되지 않아요.</span><span data-l="en">There is no server. Nicknames and past readings are never transmitted anywhere.</span><span data-l="ja">サーバーがありません。友達のニックネームも記録も、どこにも送信されません。</span><span data-l="zh">沒有伺服器。朋友的暱稱與解讀紀錄都不會傳送到任何地方。</span></p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span data-l="ko">어떻게 하나요</span><span data-l="en">How it works</span><span data-l="ja">使い方</span><span data-l="zh">怎麼用</span></h2>
+  <ol class="steps">
+    <li><b><span data-l="ko">배워요</span><span data-l="en">Learn</span><span data-l="ja">学ぶ</span><span data-l="zh">學</span></b><span data-l="ko">3급 · 2급 · 1급 순서대로. 각 레슨에 「이런 상황에서」와 「해보기」가 붙어 있어요.</span><span data-l="en">Level 3, then 2, then 1. Each lesson pairs the idea with a real situation and one thing to try.</span><span data-l="ja">3級・2級・1級の順に。各レッスンに「こんな場面で」と「やってみる」が付いています。</span><span data-l="zh">依三級、二級、一級的順序。每課都有「在這種時候」和「練習看看」。</span></li>
+    <li><b><span data-l="ko">건네요</span><span data-l="en">Hand it over</span><span data-l="ja">渡す</span><span data-l="zh">遞出去</span></b><span data-l="ko">친구에게 폰을 건네면 친구가 직접 카드를 뽑습니다. 뽑는 손이 친구 것이어야 이야기가 열려요.</span><span data-l="en">Give the phone to your friend and let them draw. The conversation opens when the hand is theirs.</span><span data-l="ja">友達にスマホを渡すと、友達が自分でカードを引きます。引く手が友達のものだから話が開きます。</span><span data-l="zh">把手機遞給朋友，讓他自己抽牌。抽牌的手是他的，話才打得開。</span></li>
+    <li><b><span data-l="ko">읽어줘요</span><span data-l="en">Read for them</span><span data-l="ja">占ってあげる</span><span data-l="zh">為他解讀</span></b><span data-l="ko">당신 화면에만 보이는 리딩 노트를 따라 말하면 됩니다. 끝나면 수첩에 「그때 나는 이렇게 말했다」를 남겨요.</span><span data-l="en">Follow the reading note that only you can see. Afterwards, write down what you actually said.</span><span data-l="ja">あなたにだけ見えるリーディングノートを見ながら話します。終わったら「あのとき私はこう言った」を残します。</span><span data-l="zh">照著只有你看得到的解讀筆記說。結束後把「那時我是這樣說的」記下來。</span></li>
+  </ol>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span data-l="ko">화면</span><span data-l="en">Screens</span><span data-l="ja">画面</span><span data-l="zh">畫面</span></h2>
+  <div class="gallery">
+    <figure><img src="./img/home.webp" alt=""><figcaption><span data-l="ko">밤에만 여는 가게</span><span data-l="en">A shop that opens at night</span><span data-l="ja">夜だけ開く店</span><span data-l="zh">只在夜裡開的店</span></figcaption></figure>
+    <figure><img src="./img/course.webp" alt=""><figcaption><span data-l="ko">3급부터 1급까지 16개 레슨</span><span data-l="en">Sixteen lessons, level 3 to 1</span><span data-l="ja">3級から1級まで16レッスン</span><span data-l="zh">從三級到一級 16 堂課</span></figcaption></figure>
+    <figure><img src="./img/journal.webp" alt=""><figcaption><span data-l="ko">단골 수첩 — 그때 나는 이렇게 말했다</span><span data-l="en">Notebook — what I said that day</span><span data-l="ja">常連手帳 — あのとき私はこう言った</span><span data-l="zh">熟客手帳 — 那時我是這樣說的</span></figcaption></figure>
+  </div>
+</div></section>
+
+<section id="free"><div class="wrap">
+  <div class="free">
+    <h2 style="margin-top:0"><span data-l="ko">광고도 구독도 없어요</span><span data-l="en">No ads. No subscription.</span><span data-l="ja">広告も定額もありません</span><span data-l="zh">沒有廣告，沒有訂閱</span></h2>
+    <ul>
+      <li><b><span data-l="ko">기능은 전부 무료</span><span data-l="en">Every feature is free</span><span data-l="ja">機能はすべて無料</span><span data-l="zh">功能全部免費</span></b> — <span data-l="ko">레슨·리딩·도감·수첩 전부. 유료는 꾸미기 하나뿐입니다.</span><span data-l="en">Lessons, readings, the card index, the notebook. The only paid item is cosmetic.</span><span data-l="ja">レッスン・占い・図鑑・手帳すべて。有料は着せ替えだけです。</span><span data-l="zh">課程、解讀、圖鑑、手帳全部。付費的只有裝飾。</span></li>
+      <li><b><span data-l="ko">광고 0</span><span data-l="en">Zero ads</span><span data-l="ja">広告ゼロ</span><span data-l="zh">零廣告</span></b> — <span data-l="ko">배너도 전면 광고도 없고, 광고 식별자를 읽지 않습니다.</span><span data-l="en">No banners, no interstitials, and we never touch the advertising identifier.</span><span data-l="ja">バナーも全面広告もなく、広告識別子も取得しません。</span><span data-l="zh">沒有橫幅也沒有插頁廣告，也不讀取廣告識別碼。</span></li>
+      <li><b><span data-l="ko">계정 없음</span><span data-l="en">No account</span><span data-l="ja">アカウント不要</span><span data-l="zh">不用註冊</span></b> — <span data-l="ko">가입도 로그인도 없습니다. 오프라인에서도 전부 됩니다.</span><span data-l="en">No sign-up, no login. It all works offline.</span><span data-l="ja">登録もログインもありません。オフラインでも全部使えます。</span><span data-l="zh">不用註冊也不用登入，離線也能全部使用。</span></li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span data-l="ko">자주 묻는 것</span><span data-l="en">FAQ</span><span data-l="ja">よくある質問</span><span data-l="zh">常見問題</span></h2>
+  <details><summary><span data-l="ko">타로를 하나도 모르는데 괜찮을까요?</span><span data-l="en">I know nothing about tarot. Is that fine?</span><span data-l="ja">タロットを全然知りませんが大丈夫ですか？</span><span data-l="zh">我完全不懂塔羅，可以嗎？</span></summary>
+    <p><span data-l="ko">그 상태를 전제로 만들었어요. 3급 첫 레슨이 「타로는 어디서 왔을까?」부터 시작합니다.</span><span data-l="en">That is the assumption. The first level-3 lesson starts with "where did tarot come from?"</span><span data-l="ja">その前提で作りました。3級の最初のレッスンは「タロットはどこから来たのか」から始まります。</span><span data-l="zh">就是為此設計的。三級第一課從「塔羅是從哪裡來的」開始。</span></p></details>
+  <details><summary><span data-l="ko">혼자서도 쓸 수 있나요?</span><span data-l="en">Can I use it alone?</span><span data-l="ja">一人でも使えますか？</span><span data-l="zh">可以自己一個人用嗎？</span></summary>
+    <p><span data-l="ko">네. 오늘의 한 장과 메이저 22장 도감은 혼자 쓰는 기능이에요. 친구 리딩은 준비가 됐을 때 하면 됩니다.</span><span data-l="en">Yes. The card of the day and the 22-card index are for you alone. Reading for a friend can wait until you feel ready.</span><span data-l="ja">はい。今日の一枚と大アルカナ22枚の図鑑は一人用です。友達に占うのは準備ができてからで大丈夫です。</span><span data-l="zh">可以。每日一張與大阿爾克那 22 張圖鑑都是一個人用的。等你準備好再幫朋友解讀。</span></p></details>
+  <details><summary><span data-l="ko">친구 이름이나 상담 내용이 저장되나요?</span><span data-l="en">Are my friend's name and questions stored?</span><span data-l="ja">友達の名前や相談内容は保存されますか？</span><span data-l="zh">朋友的名字和問題會被儲存嗎？</span></summary>
+    <p><span data-l="ko">별명과 질문을 직접 적어 남길 수 있고, <b>이 폰 안에만</b> 저장됩니다. 어디로도 전송되지 않고, 공유 이미지에도 들어가지 않아요.</span><span data-l="en">You can write a nickname and question yourself, and they stay <b>only on this phone</b>. Nothing is transmitted, and they never appear in a shared image.</span><span data-l="ja">ニックネームと質問を自分で書き残せますが、<b>この端末の中だけ</b>に保存されます。送信もされず、共有画像にも入りません。</span><span data-l="zh">你可以自己寫下暱稱與問題，但<b>只存在這支手機裡</b>。不會傳送出去，也不會出現在分享圖片中。</span></p></details>
+  <details><summary><span data-l="ko">정말 무료인가요?</span><span data-l="en">Is it really free?</span><span data-l="ja">本当に無料ですか？</span><span data-l="zh">真的免費嗎？</span></summary>
+    <p><span data-l="ko">기능은 전부 무료입니다. 유료 항목은 스승과 카드 뒷면을 바꾸는 꾸미기 하나뿐이고, 사지 않아도 모든 레슨과 리딩을 쓸 수 있어요.</span><span data-l="en">Every feature is free. The only purchase changes your mentor and card backs, and skipping it locks nothing.</span><span data-l="ja">機能はすべて無料です。有料は師匠とカード裏面を変える着せ替えだけで、買わなくても全レッスンと占いが使えます。</span><span data-l="zh">功能全部免費。付費項目只有更換老師與牌背的裝飾，不買也能使用全部課程與解讀。</span></p></details>
+  <details><summary><span data-l="ko">타로 결과를 믿어야 하나요?</span><span data-l="en">Should I believe the readings?</span><span data-l="ja">占いの結果は信じるべきですか？</span><span data-l="zh">應該相信解讀結果嗎？</span></summary>
+    <p><span data-l="ko">재미로 보는 타로예요. 이 앱은 카드를 정답이 아니라 <b>이야기를 여는 도구</b>로 다룹니다. 건강·법률·재정 같은 중요한 결정은 전문가와 상의하세요.</span><span data-l="en">It is for fun. This app treats a card as <b>a way to open a conversation</b>, not a verdict. For health, legal, or financial decisions, talk to a professional.</span><span data-l="ja">遊びとしての占いです。このアプリはカードを答えではなく<b>話を開く道具</b>として扱います。健康・法律・お金の判断は専門家にご相談ください。</span><span data-l="zh">這是好玩的塔羅。這個 App 把牌當成<b>打開話題的工具</b>，不是答案。健康、法律、財務的重要決定請諮詢專業人士。</span></p></details>
+</div></section>
+
+<footer><div class="wrap">
+  <p><a href="./privacy-policy.html"><span data-l="ko">개인정보처리방침</span><span data-l="en">Privacy Policy</span><span data-l="ja">プライバシーポリシー</span><span data-l="zh">隱私權政策</span></a>
+     <a href="mailto:travelic.games@gmail.com"><span data-l="ko">문의</span><span data-l="en">Contact</span><span data-l="ja">お問い合わせ</span><span data-l="zh">聯絡我們</span></a></p>
+  <p><span data-l="ko">재미로 보는 타로예요. 맹신은 금물!</span><span data-l="en">Tarot, just for fun. Don't take it as truth.</span><span data-l="ja">遊びとしての占いです。信じすぎないで。</span><span data-l="zh">好玩的塔羅，別太當真。</span></p>
+</div></footer>
+
+<script>
+(function(){
+  var map={ko:'ko',en:'en',ja:'ja',zh:'zh'};
+  function pick(){
+    var s=localStorage.getItem('ml-lang'); if(map[s]) return s;
+    var n=(navigator.language||'en').toLowerCase();
+    if(n.indexOf('ko')===0) return 'ko';
+    if(n.indexOf('ja')===0) return 'ja';
+    if(n.indexOf('zh')===0) return 'zh';
+    return 'en';
+  }
+  function set(l){
+    document.documentElement.setAttribute('data-lang',l);
+    document.documentElement.lang = l==='zh' ? 'zh-Hant' : l;
+    try{ localStorage.setItem('ml-lang',l); }catch(e){}
+    [].forEach.call(document.querySelectorAll('.lang'),function(b){
+      b.setAttribute('aria-current', String(b.dataset.set===l));
+    });
+  }
+  [].forEach.call(document.querySelectorAll('.lang'),function(b){
+    b.addEventListener('click',function(){ set(b.dataset.set); });
+  });
+  set(pick());
+})();
+</script>
 </body>
 </html>
